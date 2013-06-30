@@ -1,0 +1,83 @@
+<html>
+<head>
+	<script src="jquery.js"></script>
+	<script>
+	var arc=function($arc,centerx,centery,dist,angle){
+		//var angle=angle1;
+		var originx//=centerx-$arc.position().left
+		,originy;//=centery-$arc.position().top;
+
+		var that={
+			centerx:centerx,
+			centery:centery,
+			dist:dist,
+			angle:angle,
+		distdraw:function(dist){
+			oldangle=that.angle;
+			that.rotate(0);
+			that.dist=dist;
+		var distcos=Math.cos(that.angle)*that.dist;
+		var distsin=Math.sin(that.angle)*that.dist;
+			$arc.css({left:that.centerx+distcos+"px",top:that.centery-distsin-$arc.height()/2+"px"});
+			originx=that.centerx-$arc.position().left;
+			originy=that.centery-$arc.position().top;
+		 $arc.css({
+            '-webkit-transform-origin': originx+'px '+originy+'px',
+        });
+		that.rotate(oldangle);
+		},
+		center:function(centerx,centery){
+			that.centerx=centerx;
+			that.centery=centery;
+	},
+   rotate:function(angle) {
+    	that.angle=angle;
+        $arc.css({
+            //'-webkit-transform-origin': originx+'px '+originy+'px',
+            WebkitTransform: 'rotate(' + that.angle + 'deg)'
+        });
+        $arc.css({
+            '-moz-transform': 'rotate(' + that.angle + 'deg)'
+        });
+      timer = setTimeout(function () {
+          that.rotate(that.angle+.5);
+       }, 1);
+	}
+};
+		//that.distdraw(dist);
+		//that.center(centerx,centery);
+		//that.center(300,200);
+		that.center(400,400);
+		that.distdraw(100);
+		//that.rotate(0);
+		that.rotate(30);
+		that.distdraw(00);
+	};
+
+	$(function () {
+    var $elie = $(".part");
+    arc($elie,600,200,0,30);
+   // rotate(0);
+
+    
+});
+	</script>
+</head>
+<style>
+.circle {
+	width: 357px;
+    height: 357px;
+}
+#part1
+{
+position:absolute;
+height:300px;
+width:300px;
+background-image: url(arc.png);
+		 background-size: 100% 100%;
+}
+</style>
+<body>
+	<div class="part " id="part1"/>
+</body>
+</html>
