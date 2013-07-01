@@ -3,6 +3,7 @@
 	<script src="jquery.js"></script>
 	<script>
 	var selected=0,completed=0,backanim=0,foranim=0;
+var arclist=[],limit=0;
 	/*var varlistner=function(variable,targetvalue,callback)
 	{
 		setInterval(function(funcName, delay))
@@ -18,6 +19,7 @@
 			angle:angle,
 			dir:dir,
 			speed:0,
+			finalangle:finalangle,
 			$arc:$arc,
 		distdraw:function(dist,type){
 			oldangle=that.angle;
@@ -71,40 +73,9 @@
 			//that.rotate(angle);
         	//that.distdraw(dist);
 			//that.rotate(angle);
-			var checkselected=setInterval(function()
-			{
-				if(selected&&clicked)
-	{
-		goto(180*that.dir,function(){completed++});
-		//alert(that.dir);
-		
-	clearInterval(checkselected);
-	}
-	else if(selected)
-	{
-		goto(finalangle*that.dir,function(){completed++;});
-		//alert(that.dir);
-	clearInterval(checkselected);
-	}
-},100);
-var checkstate=setInterval(function(){
-	if(completed==6&&clicked)
-	{
-		$arc.delay(100).animate({'left':'0px'},500);
-		//alert(that.dir);
-		
-	clearInterval(checkstate);
-	}
-	else if(completed==6)
-	{
-		$arc.delay(100).animate({'left':'1600px'},500);
-		//alert(that.dir);
-	clearInterval(checkstate);
-	}
-},100);
-        }
-};
-var goto=function(ang,callback){
+			
+        },
+goto:function(ang,callback){
 		that.speed=15;
 		 var ctimer = setInterval(function () {
           if(that.angle>(ang-10)&&that.angle<(ang+10))
@@ -115,10 +86,12 @@ var goto=function(ang,callback){
           	callback();
           }
        }, 1);
+}
 };
 	$arc.click(function(){
 		clicked=1;
 		selected=1;
+		selectedstate(that);
 	});
 
 
@@ -135,6 +108,27 @@ var goto=function(ang,callback){
 		//that.distdraw(00);
 		return that;
 	};
+	var selectedstate=function(that)
+	{
+    var each=function(arcobj){
+    	if(arcobj==that)
+    {
+    	arcobj.goto(180*arcobj.dir,function(){arcobj.$arc.delay(600).animate({'left':'0px'},500);});
+    }
+    else
+    {
+    	arcobj.goto(arcobj.finalangle*arcobj.dir,function(){arcobj.$arc.delay(600).animate({'left':'1600px'},500);});
+
+    }
+};
+		for (var i = 0; i < arclist.length; i++) {
+			//alert(arclist[2]);
+			each(arclist[i]);
+
+    //Do something
+}
+   // i=4;
+	}
 
 	$(function () {
     var $elie1 = $("#part1");
@@ -143,13 +137,15 @@ var goto=function(ang,callback){
     var $elie4 = $("#part4");
     var $elie5 = $("#part5");
     var $elie6 = $("#part6");
-    var p1=arc($elie1,600,200,75,0,1,.3,45);
-    var p2=arc($elie2,600,200,53,30,-1,.2,45-3);
-    var p3=arc($elie3,600,200,32,45,1,.1,45); 
-    var p4=arc($elie4,600,200,75,180,1,.3,360-45+3);
-    var p5=arc($elie5,600,200,53,210,-1,.2,-45);
-    var p6=arc($elie6,600,200,32,225,1,.1,360-45+3);
-    $(document).keypress(function(){p1.init("slow");p2.init("slow");p3.init("slow");p4.init("slow");p5.init("slow");p6.init("slow");})
+    arclist[limit++]=arc($elie1,600,200,75,0,1,.3,45);
+    arclist[limit++]=arc($elie2,600,200,53,30,-1,.2,45-3);
+    arclist[limit++]=arc($elie3,600,200,32,45,1,.1,45); 
+    arclist[limit++]=arc($elie4,600,200,75,180,1,.3,360-45+3);
+    arclist[limit++]=arc($elie5,600,200,53,210,-1,.2,-45);
+    arclist[limit++]=arc($elie6,600,200,32,225,1,.1,360-45+3);
+  //  alert(arclist[2]);
+    //alert(limit);
+   $(document).keypress(function(){arclist[0].init("slow");arclist[1].init("slow");arclist[2].init("slow");arclist[3].init("slow");arclist[4].init("slow");arclist[5].init("slow");});
    /* (p1.$arc).click(function(){
     	alert("sdf");
     })*/
