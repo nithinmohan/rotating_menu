@@ -2,25 +2,35 @@
 <head>
 	<script src="jquery.js"></script>
 	<script>
-	var arc=function($arc,centerx,centery,dist,angle,dir,speed){
+	var selected=0,completed=0,backanim=0,foranim=0;
+	/*var varlistner=function(variable,targetvalue,callback)
+	{
+		setInterval(function(funcName, delay))
+	}*/
+	var arc=function($arc,centerx,centery,dist,angle,dir,speed,finalangle){
 		//var angle=angle1;
 		var originx//=centerx-$arc.position().left
-		,originy;//=centery-$arc.position().top;
-
+		,originy,normalspeed=speed,normalangle=angle,clicked=0,timer;//=centery-$arc.position().top;
 		var that={
 			centerx:centerx,
 			centery:centery,
 			dist:dist,
 			angle:angle,
 			dir:dir,
-			speed:speed,
-		distdraw:function(dist){
+			speed:0,
+			$arc:$arc,
+		distdraw:function(dist,type){
 			oldangle=that.angle;
 			that.rotate(0);
 			that.dist=dist;
-		var distcos=Math.cos(that.angle)*that.dist;
-		var distsin=Math.sin(that.angle)*that.dist;
-			$arc.css({left:that.centerx+distcos+"px",top:that.centery-distsin-$arc.height()/2+"px"});
+			if(type=="fast")
+				time =1;
+			else time=500;
+		//var distcos=Math.cos(that.angle)*that.dist;
+		//var distsin=Math.sin(that.angle)*that.dist;
+			$arc.animate({left:that.centerx+dist+"px",top:that.centery/*-distsin*/-$arc.height()/2+"px"},time,function(){
+				that.speed=speed;
+				//$arc.css({left:that.centerx+dist+"px",top:that.centery/*-distsin*/-$arc.height()/2+"px"});
 			originx=that.centerx-$arc.position().left;
 			originy=that.centery-$arc.position().top;
 		 $arc.css({
@@ -29,13 +39,15 @@
 		 $arc.css({
             '-moz-transform-origin': originx+'px '+originy+'px',
         });
-		that.rotate(oldangle);
+		that.rotate(angle);
+		});
 		},
 		center:function(centerx,centery){
 			that.centerx=centerx;
 			that.centery=centery;
 	},
    rotate:function(angle) {
+   	clearTimeout(timer);
     	that.angle=angle;
         $arc.css({
             //'-webkit-transform-origin': originx+'px '+originy+'px',
@@ -44,19 +56,84 @@
         $arc.css({
             '-moz-transform': 'rotate(' + that.angle + 'deg)'
         });
-      timer = setTimeout(function () {
-          that.rotate((that.angle+that.dir*that.speed)%360);
-       }, 1);
+   timer = setTimeout(function () {
+        that.rotate((that.angle+that.dir*that.speed)%360);
+          
+     }, 20);
+	},
+        init:function(type){
+        	clicked=0;
+        	selected=0;
+        	completed=0;
+        	//that.speed=speed;
+        that.distdraw(dist,type);
+        	//that.center(centerx,centery)
+			//that.rotate(angle);
+        	//that.distdraw(dist);
+			//that.rotate(angle);
+			var checkselected=setInterval(function()
+			{
+				if(selected&&clicked)
+	{
+		goto(180*that.dir,function(){completed++});
+		//alert(that.dir);
+		
+	clearInterval(checkselected);
 	}
+	else if(selected)
+	{
+		goto(finalangle*that.dir,function(){completed++;});
+		//alert(that.dir);
+	clearInterval(checkselected);
+	}
+},100);
+var checkstate=setInterval(function(){
+	if(completed==6&&clicked)
+	{
+		$arc.animate({'left':'0px'},500);
+		//alert(that.dir);
+		
+	clearInterval(checkstate);
+	}
+	else if(completed==6)
+	{
+		$arc.animate({'left':'1600px'},500);
+		//alert(that.dir);
+	clearInterval(checkstate);
+	}
+},100);
+        }
 };
+var goto=function(ang,callback){
+		that.speed=15;
+		 var ctimer = setInterval(function () {
+          if(that.angle>(ang-10)&&that.angle<(ang+10))
+          {
+          	that.angle=ang;
+          	that.speed=0;
+          	clearInterval(ctimer);
+          	callback();
+          }
+       }, 1);
+};
+	$arc.click(function(){
+		clicked=1;
+		selected=1;
+	});
+
+
+	
 		//that.distdraw(dist);
 		//that.center(centerx,centery);
 		//that.center(300,200);
 		//that.center(400,400);
-		that.distdraw(that.dist);
+		//that.distdraw(that.dist);
 		//that.rotate(0);
-		that.rotate(that.angle);
+		//that.rotate(that.angle);
+		that.init("fast");
+		//that.rotate(0);
 		//that.distdraw(00);
+		return that;
 	};
 
 	$(function () {
@@ -66,12 +143,16 @@
     var $elie4 = $("#part4");
     var $elie5 = $("#part5");
     var $elie6 = $("#part6");
-    arc($elie1,600,200,75,0,1,.3);
-    arc($elie2,600,200,53,30,-1,.2);
-    arc($elie3,600,200,32,45,1,.1); 
-    arc($elie4,600,200,75,180,1,.3);
-    arc($elie5,600,200,53,210,-1,.2);
-    arc($elie6,600,200,32,225,1,.1);
+    var p1=arc($elie1,600,200,75,0,1,.3,45);
+    var p2=arc($elie2,600,200,53,30,-1,.2,45-3);
+    var p3=arc($elie3,600,200,32,45,1,.1,45); 
+    var p4=arc($elie4,600,200,75,180,1,.3,360-45+3);
+    var p5=arc($elie5,600,200,53,210,-1,.2,-45);
+    var p6=arc($elie6,600,200,32,225,1,.1,360-45+3);
+    $(document).keypress(function(){p1.init("slow");p2.init("slow");p3.init("slow");p4.init("slow");p5.init("slow");p6.init("slow");})
+   /* (p1.$arc).click(function(){
+    	alert("sdf");
+    })*/
    // rotate(0);
 
     
@@ -91,6 +172,10 @@ body
 {
 position:absolute;
 background-size: 100% 100%;
+}
+.part:hover
+{
+	cursor: pointer;
 }
 #part1
 {
