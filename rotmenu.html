@@ -145,13 +145,27 @@ var goto=function(ang,callback){
     var $elie4 = $("#part4");
     var $elie5 = $("#part5");
     var $elie6 = $("#part6");
-    var p1=arc($elie1,600,200,75,0,1,.3,45);
-    var p2=arc($elie2,600,200,53,30,-1,.2,45-3);
-    var p3=arc($elie3,600,200,32,45,1,.1,45); 
-    var p4=arc($elie4,600,200,75,180,1,.3,360-45+3);
-    var p5=arc($elie5,600,200,53,210,-1,.2,-45);
-    var p6=arc($elie6,600,200,32,225,1,.1,360-45+3);
-    $(document).keypress(function(){p1.init("slow");p2.init("slow");p3.init("slow");p4.init("slow");p5.init("slow");p6.init("slow");})
+    arclist[limit++]=arc($elie1,300,150,75,0,1,.3,45);
+    arclist[limit++]=arc($elie2,300,150,53,30,-1,.2,45-3);
+    arclist[limit++]=arc($elie3,300,150,32,45,1,.1,45); 
+    arclist[limit++]=arc($elie4,300,150,75,180,1,.3,360-45+3);
+    arclist[limit++]=arc($elie5,300,150,53,210,-1,.2,-45);
+    arclist[limit++]=arc($elie6,300,150,32,225,1,.1,360-45+3);
+  //  alert(arclist[2]);
+    //alert(limit);
+   $(document).keypress(function(){arclist[0].init("slow");arclist[1].init("slow");arclist[2].init("slow");arclist[3].init("slow");arclist[4].init("slow");arclist[5].init("slow");})
+   /* (p1.$arc).click(function(){
+    	alert("sdf");
+    })*/
+   // rotate(0);
+  $("#container").mouseover(function(){
+   	for(var i=0;i<6;i++)
+   	arclist[i].speed=.05;
+   });
+    $("#container").mouseout(function(){
+   	for(var i=0;i<6;i++)
+   	arclist[i].setspeed();
+   });
    /* (p1.$arc).click(function(){
     	alert("sdf");
     })*/
