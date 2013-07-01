@@ -156,12 +156,16 @@ goto:function(ang,callback){
     })*/
    // rotate(0);
   $("#container").mouseover(function(){
+  	if(clicked!=1)
+  	{
    	for(var i=0;i<6;i++)
-   	arclist[i].speed=.05;
+   	arclist[i].speed=.05;}
    });
     $("#container").mouseout(function(){
+    	if(clicked!=1)
+    	{
    	for(var i=0;i<6;i++)
-   	arclist[i].setspeed();
+   	arclist[i].setspeed();}
    });
   
     
