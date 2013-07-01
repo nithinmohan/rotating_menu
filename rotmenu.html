@@ -21,6 +21,10 @@
 			dir:dir,
 			speed:0,
 			$arc:$arc,
+			setspeed:function()
+			{
+				that.speed=speed;
+			},
 		distdraw:function(dist,type){
 			oldangle=that.angle;
 			that.rotate(0);
@@ -159,12 +163,14 @@ var goto=function(ang,callback){
     })*/
    // rotate(0);
   $("#container").mouseover(function(){
+  	if(selected!=1){
    	for(var i=0;i<6;i++)
-   	arclist[i].speed=.05;
+   	arclist[i].speed=.05;}
    });
     $("#container").mouseout(function(){
+    	if(selected!=1){
    	for(var i=0;i<6;i++)
-   	arclist[i].setspeed();
+   	arclist[i].setspeed();}
    });
    /* (p1.$arc).click(function(){
     	alert("sdf");
@@ -192,6 +198,14 @@ background-size: 100% 100%;
 .part:hover
 {
 	cursor: pointer;
+}
+#container
+{
+	position: absolute;
+	left:030px;
+	height: 300px;
+	width: 500px;
+
 }
 #part1
 {
@@ -237,11 +251,13 @@ z-index:3;
 }
 </style>
 <body>
+	<div id="container">
 	<div class="part " id="part1"></div>
 	<div class="part " id="part2"></div>
 	<div class="part " id="part3"></div>
 	<div class="part " id="part4"></div>
 	<div class="part " id="part5"></div>
 	<div class="part " id="part6"></div>
+</div>
 </body>
 </html>
