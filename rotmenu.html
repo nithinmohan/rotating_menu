@@ -90,14 +90,14 @@
 var checkstate=setInterval(function(){
 	if(completed==6&&clicked)
 	{
-		$arc.animate({'left':'0px'},500);
+		$arc.delay(100).animate({'left':'0px'},500);
 		//alert(that.dir);
 		
 	clearInterval(checkstate);
 	}
 	else if(completed==6)
 	{
-		$arc.animate({'left':'1600px'},500);
+		$arc.delay(100).animate({'left':'1600px'},500);
 		//alert(that.dir);
 	clearInterval(checkstate);
 	}
