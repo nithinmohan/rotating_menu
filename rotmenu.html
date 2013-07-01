@@ -118,11 +118,11 @@ goto:function(ang,callback){
     var each=function(arcobj){
     	if(arcobj==that)
     {
-    	arcobj.goto(180*arcobj.dir,function(){arcobj.$arc.delay(600).animate({'left':'0px'},500);});
+    	arcobj.goto(180*arcobj.dir,function(){arcobj.$arc.delay(600).animate({'left':'0px'},500,function(){completed++;});});
     }
     else
     {
-    	arcobj.goto(arcobj.finalangle*arcobj.dir,function(){arcobj.$arc.delay(600).animate({'left':'1600px'},500);});
+    	arcobj.goto(arcobj.finalangle*arcobj.dir,function(){arcobj.$arc.delay(600).animate({'left':'1600px'},500,function(){completed++;});});
 
     }
 };
@@ -150,7 +150,7 @@ goto:function(ang,callback){
     arclist[limit++]=arc($elie6,300,150,32,225,1,.1,360-45+3);
   //  alert(arclist[2]);
     //alert(limit);
-   $(document).keypress(function(){arclist[0].init("slow");arclist[1].init("slow");arclist[2].init("slow");arclist[3].init("slow");arclist[4].init("slow");arclist[5].init("slow");})
+   $(document).keypress(function(){if(completed==6){arclist[0].init("slow");arclist[1].init("slow");arclist[2].init("slow");arclist[3].init("slow");arclist[4].init("slow");arclist[5].init("slow");}})
    /* (p1.$arc).click(function(){
     	alert("sdf");
     })*/
