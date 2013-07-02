@@ -2,17 +2,16 @@
 <head>
 	<script src="jquery.js"></script>
 	<script>
-	var selected=0,completed=0,backanim=0,foranim=0;
-	var arclist=[],limit=0;
-
-	/*var varlistner=function(variable,targetvalue,callback)
-	{
-		setInterval(function(funcName, delay))
-	}*/
+	var selected=0,completed=0;
+	/* selected variable is a global variable which will take the value 1 when any of the menu item is clicked,
+	it is used for identifying the time to stop automatic rotation and then to do to the position before splitting.
+	completed variable is incremented each time every menu item goes to the desired angle(just before splitting),
+	and when the variable's value becomes 6 that means every variable has assumed its static postion just before splitting and when that state occurs the splitting animation starts.
+	*/
+	var arclist=[],limit=0;/* these will store the arc objects returned by the arc function.*/
+	/*arc function is the core of this program. It takes the arguments specified and return an object.Just before returnig the object the animation is initialised*/
 	var arc=function($arc,centerx,centery,dist,angle,dir,speed,finalangle){
-		//var angle=angle1;
-		var originx//=centerx-$arc.position().left
-		,originy,normalspeed=speed,normalangle=angle,clicked=0,timer;//=centery-$arc.position().top;
+		var originx,originy,clicked=0,timer;
 		var that={
 			centerx:centerx,
 			centery:centery,
@@ -21,22 +20,25 @@
 			dir:dir,
 			speed:0,
 			$arc:$arc,
+			/* these variables are used the following functions as "that.variablename". the original values will be preserved in "variable name". all except speed is intialised with the arguments passed*/
 			setspeed:function()
 			{
 				that.speed=speed;
 			},
+			/*this will set the speed to the initial value. this is used in the part where the menuitems comeback to the initial state when a key is pressed*/
 		distdraw:function(dist,type){
-			oldangle=that.angle;
 			that.rotate(0);
+			/*brings all div to the right of centerx and centery. this is beasically resetting the divs(usefull when comming back)*/
 			that.dist=dist;
+			/*there are two types of animation for loading menu's to the screen. when page is loaded for the first time no amimation is needed
+			,or very fast indeed, so animation time in that case will be set as 1ms .when menu comeback user has to see it comming from either side so time in that case is set to be 500ms*/
 			if(type=="fast")
 				time =1;
 			else time=500;
-		//var distcos=Math.cos(that.angle)*that.dist;
-		//var distsin=Math.sin(that.angle)*that.dist;
-			$arc.animate({left:that.centerx+dist+"px",top:that.centery/*-distsin*/-$arc.height()/2+"px"},time,function(){
-				that.speed=speed;
-				//$arc.css({left:that.centerx+dist+"px",top:that.centery/*-distsin*/-$arc.height()/2+"px"});
+			/*this position the menu will be overlapping each other*/
+			/*When the following animation is executed each menu will be placed in a distance of dist form centerx and centery specified in each objects*/
+			$arc.animate({left:that.centerx+dist+"px",top:that.centery-$arc.height()/2+"px"},time,function(){
+				/*after the objects are placed in  desired distance its time for rotation.Note that till now rotation speed is zero(no rotation will takes place). Now we are setting the center for rotation. There is a bit complication here. the center of rotation is not simply centerx and centery.default rotation origin is the center of the div.(0,0) isthe top-left corner of the div, not the top-left of document.so we have calculate it relative to the position of top-left of div.*/
 			originx=that.centerx-$arc.position().left;
 			originy=that.centery-$arc.position().top;
 		 $arc.css({
@@ -45,18 +47,18 @@
 		 $arc.css({
             '-moz-transform-origin': originx+'px '+originy+'px',
         });
+		 /*here we set angle to the initial angle specifies in the argument. and we will give speed to the rotation*/
 		that.rotate(angle);
+		that.speed=speed;
 		});
 		},
-		center:function(centerx,centery){
-			that.centerx=centerx;
-			that.centery=centery;
-	},
+		/*even i dont know about the working of rotate perfect, i tried various modification, some worked miraculously.
+		basically it calls rotate every 20ms, setting new angle every time. initially every time it was comming back the speed increades so 
+		i added cleartimeout and that problem was solved. i think that's because every time it is comming back distdraw is called and a new timer is set,and cleartimeout will avoid that.*/ 
    rotate:function(angle) {
    	clearTimeout(timer);
     	that.angle=angle;
         $arc.css({
-            //'-webkit-transform-origin': originx+'px '+originy+'px',
             WebkitTransform: 'rotate(' + that.angle + 'deg)'
         });
         $arc.css({
@@ -67,53 +69,47 @@
           
      }, 20);
 	},
+	/* init function initialises the menu's*/
         init:function(type){
         	clicked=0;
         	selected=0;
         	completed=0;
-        	//that.speed=speed;
         that.distdraw(dist,type);
-        	//that.center(centerx,centery)
-			//that.rotate(angle);
-        	//that.distdraw(dist);
-			//that.rotate(angle);
+        /*clicked variable unique for each object, only clicled object will get the clicked variable set to 1. animation will based on that value*/
+        /*next few lines were expalined in the begining*/
+        /*there is problen with rapid clicking on two divs*/
 			var checkselected=setInterval(function()
 			{
 				if(selected&&clicked)
 	{
-		goto(180*that.dir,function(){completed++});
-		//alert(that.dir);
-		
 	clearInterval(checkselected);
+		goto(180*that.dir,function(){completed++});
 	}
 	else if(selected)
 	{
-		goto(finalangle*that.dir,function(){completed++;});
-		//alert(that.dir);
 	clearInterval(checkselected);
+		goto(finalangle*that.dir,function(){completed++;});
 	}
-},100);
+},10);
 var checkstate=setInterval(function(){
 	if(completed==6&&clicked)
 	{
-		$arc.delay(100).animate({'left':'0px'},500);
-		//alert(that.dir);
-		
 	clearInterval(checkstate);
+		$arc.delay(100).animate({'left':'0px'},500);
 	}
 	else if(completed==6)
 	{
-		$arc.delay(100).animate({'left':'1600px'},500);
-		//alert(that.dir);
 	clearInterval(checkstate);
+		$arc.delay(100).animate({'left':'1600px'},500);
 	}
-},100);
+},10);
         }
 };
+/*goto function will goto a specific angle in the rotation and stops there*/
 var goto=function(ang,callback){
 		that.speed=15;
 		 var ctimer = setInterval(function () {
-          if(that.angle>(ang-10)&&that.angle<(ang+10))
+          if(that.angle>(ang-15)&&that.angle<(ang+15))
           {
           	that.angle=ang;
           	that.speed=0;
@@ -126,22 +122,9 @@ var goto=function(ang,callback){
 		clicked=1;
 		selected=1;
 	});
-
-
-	
-		//that.distdraw(dist);
-		//that.center(centerx,centery);
-		//that.center(300,200);
-		//that.center(400,400);
-		//that.distdraw(that.dist);
-		//that.rotate(0);
-		//that.rotate(that.angle);
 		that.init("fast");
-		//that.rotate(0);
-		//that.distdraw(00);
 		return that;
 	};
-
 	$(function () {
     var $elie1 = $("#part1");
     var $elie2 = $("#part2");
@@ -155,13 +138,8 @@ var goto=function(ang,callback){
     arclist[limit++]=arc($elie4,300,150,75,180,1,.3,360-45+3);
     arclist[limit++]=arc($elie5,300,150,53,210,-1,.2,-45);
     arclist[limit++]=arc($elie6,300,150,32,225,1,.1,360-45+3);
-  //  alert(arclist[2]);
-    //alert(limit);
    $(document).keypress(function(){if(completed==6){arclist[0].init("slow");arclist[1].init("slow");arclist[2].init("slow");arclist[3].init("slow");arclist[4].init("slow");arclist[5].init("slow");}})
-   /* (p1.$arc).click(function(){
-    	alert("sdf");
-    })*/
-   // rotate(0);
+   /*slows the animation when mouse is hovered to the outer div and resumed to the normal speed when mouse comes out of it*/
   $("#container").mouseover(function(){
   	if(selected!=1){
    	for(var i=0;i<6;i++)
@@ -172,12 +150,6 @@ var goto=function(ang,callback){
    	for(var i=0;i<6;i++)
    	arclist[i].setspeed();}
    });
-   /* (p1.$arc).click(function(){
-    	alert("sdf");
-    })*/
-   // rotate(0);
-
-    
 });
 	</script>
 </head>
