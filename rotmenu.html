@@ -87,6 +87,8 @@
 	}
 	else if(selected)
 	{
+		$arc.unbind("click");
+		/*to avoid clicking more than one menu*/
 	clearInterval(checkselected);
 		goto(finalangle*that.dir,function(){completed++;});
 	}
