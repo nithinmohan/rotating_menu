@@ -65,7 +65,7 @@
             '-moz-transform': 'rotate(' + that.angle + 'deg)'
         });
    timer = setTimeout(function () {
-        that.rotate((that.angle+that.dir*that.speed)%360);
+        that.rotate((that.angle+that.dir*that.speed+360)%360);
           
      }, 20);
 	},
@@ -83,14 +83,14 @@
 				if(selected&&clicked)
 	{
 	clearInterval(checkselected);
-		goto(180*that.dir,function(){completed++});
+		goto(180,function(){completed++});
 	}
 	else if(selected)
 	{
 		$arc.unbind("click");
 		/*to avoid clicking more than one menu*/
 	clearInterval(checkselected);
-		goto(finalangle*that.dir,function(){completed++;});
+		goto(finalangle,function(){completed++;});
 	}
 },10);
 var checkstate=setInterval(function(){
@@ -135,10 +135,10 @@ var goto=function(ang,callback){
     var $elie5 = $("#part5");
     var $elie6 = $("#part6");
     arclist[limit++]=arc($elie1,300,150,75,0,1,.3,45);
-    arclist[limit++]=arc($elie2,300,150,53,30,-1,.2,45-3);
+    arclist[limit++]=arc($elie2,300,150,53,30,-1,.2,45);
     arclist[limit++]=arc($elie3,300,150,32,45,1,.1,45); 
     arclist[limit++]=arc($elie4,300,150,75,180,1,.3,360-45+3);
-    arclist[limit++]=arc($elie5,300,150,53,210,-1,.2,-45);
+    arclist[limit++]=arc($elie5,300,150,53,210,-1,.2,360-45+3);
     arclist[limit++]=arc($elie6,300,150,32,225,1,.1,360-45+3);
    $(document).keypress(function(){if(completed==6){arclist[0].init("slow");arclist[1].init("slow");arclist[2].init("slow");arclist[3].init("slow");arclist[4].init("slow");arclist[5].init("slow");}})
    /*slows the animation when mouse is hovered to the outer div and resumed to the normal speed when mouse comes out of it*/
