@@ -105,6 +105,10 @@ var checkstate=setInterval(function(){
 		$arc.delay(100).animate({'left':'1600px'},500);
 	}
 },10);
+	$arc.click(function(){
+		clicked=1;
+		selected=1;
+	});
         }
 };
 /*goto function will goto a specific angle in the rotation and stops there*/
@@ -120,10 +124,6 @@ var goto=function(ang,callback){
           }
        }, 1);
 };
-	$arc.click(function(){
-		clicked=1;
-		selected=1;
-	});
 		that.init("fast");
 		return that;
 	};
