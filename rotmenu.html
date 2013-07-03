@@ -3,7 +3,7 @@
 	<script src="jquery.js"></script>
 	<script>
 	var selected=0,completed=0,backanim=0,foranim=0;
-var arclist=[],limit=0;
+	var arclist=[],limit=0;
 	/*var varlistner=function(variable,targetvalue,callback)
 	{
 		setInterval(function(funcName, delay))
@@ -25,75 +25,74 @@ var arclist=[],limit=0;
 			{
 				that.speed=speed;
 			},
-		distdraw:function(dist,type){
-			oldangle=that.angle;
-			that.rotate(0);
-			that.dist=dist;
-			if(type=="fast")
-				time =1;
-			else time=500;
+			distdraw:function(dist,type){
+				oldangle=that.angle;
+				that.rotate(0);
+				that.dist=dist;
+				if(type=="fast")
+					time =1;
+				else time=500;
 		//var distcos=Math.cos(that.angle)*that.dist;
 		//var distsin=Math.sin(that.angle)*that.dist;
-			$arc.animate({left:that.centerx+dist+"px",top:that.centery/*-distsin*/-$arc.height()/2+"px"},time,function(){
-				that.speed=speed;
+		$arc.animate({left:that.centerx+dist+"px",top:that.centery/*-distsin*/-$arc.height()/2+"px"},time,function(){
+			that.speed=speed;
 				//$arc.css({left:that.centerx+dist+"px",top:that.centery/*-distsin*/-$arc.height()/2+"px"});
-			originx=that.centerx-$arc.position().left;
-			originy=that.centery-$arc.position().top;
-		 $arc.css({
-            '-webkit-transform-origin': originx+'px '+originy+'px',
-        });
-		 $arc.css({
-            '-moz-transform-origin': originx+'px '+originy+'px',
-        });
-		that.rotate(angle);
-		});
-		},
-		center:function(centerx,centery){
-			that.centerx=centerx;
-			that.centery=centery;
+				originx=that.centerx-$arc.position().left;
+				originy=that.centery-$arc.position().top;
+				$arc.css({
+					'-webkit-transform-origin': originx+'px '+originy+'px',
+				});
+				$arc.css({
+					'-moz-transform-origin': originx+'px '+originy+'px',
+				});
+				that.rotate(angle);
+			});
 	},
-   rotate:function(angle) {
-   	clearTimeout(timer);
-    	that.angle=angle;
-        $arc.css({
+	center:function(centerx,centery){
+		that.centerx=centerx;
+		that.centery=centery;
+	},
+	rotate:function(angle) {
+		clearTimeout(timer);
+		that.angle=angle;
+		$arc.css({
             //'-webkit-transform-origin': originx+'px '+originy+'px',
             WebkitTransform: 'rotate(' + that.angle + 'deg)'
         });
-        $arc.css({
-            '-moz-transform': 'rotate(' + that.angle + 'deg)'
-        });
-   timer = setTimeout(function () {
-        that.rotate((that.angle+that.dir*that.speed)%360);
-          
-     }, 20);
+		$arc.css({
+			'-moz-transform': 'rotate(' + that.angle + 'deg)'
+		});
+		timer = setTimeout(function () {
+			that.rotate((that.angle+that.dir*that.speed)%360);
+
+		}, 20);
 	},
-        init:function(type){
-        	clicked=0;
-        	selected=0;
-        	completed=0;
+	init:function(type){
+		clicked=0;
+		selected=0;
+		completed=0;
         	//that.speed=speed;
-        that.distdraw(dist,type);
+        	that.distdraw(dist,type);
         	//that.center(centerx,centery)
 			//that.rotate(angle);
         	//that.distdraw(dist);
 			//that.rotate(angle);
 			
-        },
-goto:function(ang,callback){
-		that.speed=15;
-		 var ctimer = setInterval(function () {
-          if(that.angle>(ang-10)&&that.angle<(ang+10))
-          {
-          	that.angle=ang;
-          	that.speed=0;
-          	clearInterval(ctimer);
-          	callback();
-          }
-       }, 1);
-}
-};
+		},
+		goto:function(ang,callback){
+			that.speed=15;
+			var ctimer = setInterval(function () {
+				if(that.angle>(ang-10)&&that.angle<(ang+10))
+				{
+					that.angle=ang;
+					that.speed=0;
+					clearInterval(ctimer);
+					callback();
+				}
+			}, 1);
+		}
+	};
 	$arc.bind("click",function(){
-		$arc.unbind("click");
 		clicked=1;
 		selected=1;
 		selectedstate(that);
@@ -115,62 +114,63 @@ goto:function(ang,callback){
 	};
 	var selectedstate=function(that)
 	{
-    var each=function(arcobj){
-    	if(arcobj==that)
-    {
-    	arcobj.goto(180*arcobj.dir,function(){arcobj.$arc.delay(600).animate({'left':'0px'},500,function(){completed++;});});
-    }
-    else
-    {
-    	arcobj.goto(arcobj.finalangle*arcobj.dir,function(){arcobj.$arc.delay(600).animate({'left':'1600px'},500,function(){completed++;});});
+		var each=function(arcobj){
+			if(arcobj==that)
+			{
+				arcobj.goto(180*arcobj.dir,function(){arcobj.$arc.delay(600).animate({'left':'0px'},500,function(){completed++;});});
+			}
+			else
+			{
+				arcobj.goto(arcobj.finalangle*arcobj.dir,function(){arcobj.$arc.delay(600).animate({'left':'1600px'},500,function(){completed++;});});
 
-    }
-};
+			}
+		};
 		for (var i = 0; i < arclist.length; i++) {
 			//alert(arclist[2]);
+			arclist[i].$arc.unbind("click");
 			each(arclist[i]);
 
     //Do something
 }
    // i=4;
-	}
+}
 
-	$(function () {
-    var $elie1 = $("#part1");
-    var $elie2 = $("#part2");
-    var $elie3 = $("#part3");
-    var $elie4 = $("#part4");
-    var $elie5 = $("#part5");
-    var $elie6 = $("#part6");
-    arclist[limit++]=arc($elie1,300,150,75,0,1,.3,45);
-    arclist[limit++]=arc($elie2,300,150,53,30,-1,.2,45-3);
-    arclist[limit++]=arc($elie3,300,150,32,45,1,.1,45); 
-    arclist[limit++]=arc($elie4,300,150,75,180,1,.3,360-45+3);
-    arclist[limit++]=arc($elie5,300,150,53,210,-1,.2,-45);
-    arclist[limit++]=arc($elie6,300,150,32,225,1,.1,360-45+3);
+$(function () {
+	var $elie1 = $("#part1");
+	var $elie2 = $("#part2");
+	var $elie3 = $("#part3");
+	var $elie4 = $("#part4");
+	var $elie5 = $("#part5");
+	var $elie6 = $("#part6");
+	arclist[limit++]=arc($elie1,300,150,75,0,1,.3,45);
+	arclist[limit++]=arc($elie2,300,150,53,30,-1,.2,45-3);
+	arclist[limit++]=arc($elie3,300,150,32,45,1,.1,45); 
+	arclist[limit++]=arc($elie4,300,150,75,180,1,.3,360-45+3);
+	arclist[limit++]=arc($elie5,300,150,53,210,-1,.2,-45);
+	arclist[limit++]=arc($elie6,300,150,32,225,1,.1,360-45+3);
   //  alert(arclist[2]);
     //alert(limit);
-   $(document).keypress(function(){if(completed==6){arclist[0].init("slow");arclist[1].init("slow");arclist[2].init("slow");arclist[3].init("slow");arclist[4].init("slow");arclist[5].init("slow");}})
+    $(document).keypress(function(){if(completed==6){arclist[0].init("slow");arclist[1].init("slow");arclist[2].init("slow");arclist[3].init("slow");arclist[4].init("slow");arclist[5].init("slow");}})
    /* (p1.$arc).click(function(){
     	alert("sdf");
     })*/
    // rotate(0);
-  $("#container").mouseover(function(){
-  	if(selected!=1)
-  	{
-   	for(var i=0;i<6;i++)
-   	arclist[i].speed=.05;}
-   });
-    $("#container").mouseout(function(){
-    	if(selected!=1)
-    	{
-   	for(var i=0;i<6;i++)
-   	arclist[i].setspeed();}
-   });
-  
-    
+   $("#container").mouseover(function(){
+   	if(selected!=1)
+   	{
+   		for(var i=0;i<6;i++)
+   			arclist[i].speed=.05;}
+   	});
+   $("#container").mouseout(function(){
+   	if(selected!=1)
+   	{
+   		for(var i=0;i<6;i++)
+   			arclist[i].setspeed();}
+   	});
+
+
 });
-	</script>
+</script>
 </head>
 <style>
 body
@@ -179,7 +179,7 @@ body
 }
 .circle {
 	width: 357px;
-    height: 357px;
+	height: 357px;
 }
 #container
 {
@@ -191,8 +191,8 @@ body
 }
 .part
 {
-position:absolute;
-background-size: 100% 100%;
+	position:absolute;
+	background-size: 100% 100%;
 }
 .part:hover
 {
@@ -200,55 +200,55 @@ background-size: 100% 100%;
 }
 #part1
 {
-height:212px;
-width:75px;
-background-image: url(farc1.png);
-z-index:1;
+	height:212px;
+	width:75px;
+	background-image: url(farc1.png);
+	z-index:1;
 }
 #part2
 {
-height:149px;
-width:54px;
-background-image: url(farc2.png);
-z-index:2;
+	height:149px;
+	width:54px;
+	background-image: url(farc2.png);
+	z-index:2;
 }
 #part3
 {
-height:105px;
-width:44px;
-background-image: url(farc3.png);
-z-index:3;
+	height:105px;
+	width:44px;
+	background-image: url(farc3.png);
+	z-index:3;
 }
 #part4
 {
-height:212px;
-width:75px;
-background-image: url(farc1.png);
-z-index:1;
+	height:212px;
+	width:75px;
+	background-image: url(farc1.png);
+	z-index:1;
 }
 #part5
 {
-height:149px;
-width:54px;
-background-image: url(farc2.png);
-z-index:2;
+	height:149px;
+	width:54px;
+	background-image: url(farc2.png);
+	z-index:2;
 }
 #part6
 {
-height:105px;
-width:44px;
-background-image: url(farc3.png);
-z-index:3;
+	height:105px;
+	width:44px;
+	background-image: url(farc3.png);
+	z-index:3;
 }
 </style>
 <body>
 	<div id="container">
-	<div class="part" id="part1"></div>
-	<div class="part" id="part2"></div>
-	<div class="part" id="part3"></div>
-	<div class="part" id="part4"></div>
-	<div class="part" id="part5"></div>
-	<div class="part" id="part6"></div>
-</div>
+		<div class="part" id="part1"></div>
+		<div class="part" id="part2"></div>
+		<div class="part" id="part3"></div>
+		<div class="part" id="part4"></div>
+		<div class="part" id="part5"></div>
+		<div class="part" id="part6"></div>
+	</div>
 </body>
 </html>
